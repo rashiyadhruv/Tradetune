@@ -39,12 +39,10 @@ const Log = ({ item, index }: LogProps) => {
         <div className={styles.price}>
           {item.speculatedEffect?.slice(0, 10)}
           {"  "}
-          {item.speculatedEffect?.slice(11, -2)}
+          {item.speculatedEffect?.slice(11, -1)}
         </div>
       </div>
-      <div className={styles.info}>
-        <div className={styles.price}>{item.speculatedEffect}</div>
-      </div>
+      <div className={styles.info}>-</div>
     </a>
   );
 };

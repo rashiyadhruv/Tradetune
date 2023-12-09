@@ -38,7 +38,7 @@ const Description = ({ content, addTags, tags }: DescriptionProps) => {
             ) : null}
 
             <div className={cn("h4", styles.stagee)}>
-              {!addTags ? "Your owned tokens" : "Watchlist token"}
+              {!addTags ? "MUST WATCH" : "Watchlist token"}
             </div>
             {addTags && (
               <>

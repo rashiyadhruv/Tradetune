@@ -28,12 +28,16 @@ const socials = [
 
 const menu = [
   {
-    title: "Bots",
-    url: "/discover",
+    title: "Snipe",
+    url: "/snipe",
   },
   {
     title: "Dashboard",
-    url: "/create",
+    url: "/dashboard",
+  },
+  {
+    title: "M.A.A.P",
+    url: "/maap",
   },
 ];
 

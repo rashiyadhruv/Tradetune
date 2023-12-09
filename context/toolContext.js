@@ -7,10 +7,10 @@ import RenderResult from "next/dist/server/render-result";
 import ERC20 from "./ERC20.json";
 import contract from "./contract.json";
 
-import celoOracle from "./celoOracle.json"
-import avaxOracle from "./avaxOracle.json"
+import celoOracle from "./celoOracle.json";
+import avaxOracle from "./avaxOracle.json";
 
-const Moralis = require('moralis');
+const Moralis = require("moralis");
 
 export const ToolContext = createContext();
 
@@ -19,11 +19,12 @@ const contractAddress = "0xEC6C1001a15c48D4Ea2C7CD7C45a1c5b6aD120E9"; // sender
 const contractAddressSepolia = "0x09286CD3635290A470e1C428Fea23Bbb24c1059A"; // receiver
 const linkErc20ContractAddress = "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846";
 
-
 const contractAddressCelo = "0x2849CA671e7029BD66Fa119d418a498713927bE7"; // receiver
 
-const chainlinkOracleFujiContractAddress = "0x96a32d50727DB289555b12c807Ec2e3e69FCd7D1";
-const chainlinkOracleCeloContractAddress = "0xd4e6eC0202F1960dA896De13089FF0e4A07Db4E9";
+const chainlinkOracleFujiContractAddress =
+  "0xd0a6220aC15179D83BecF2fd7E01e15882575D44";
+const chainlinkOracleCeloContractAddress =
+  "0xd4e6eC0202F1960dA896De13089FF0e4A07Db4E9";
 
 const contractAbi = contract.abi;
 const erc20Abi = ERC20.abi;
@@ -79,6 +80,10 @@ export const ToolProvider = ({ children }) => {
     "DNT",
     "REP",
   ]);
+
+  const [formattedCrypto, setFormattedCrypto] = useState([]);
+  const [mustWatch, setMustWatch] = useState([]);
+
   useEffect(() => {
     (async () => {})();
   }, []);
@@ -204,7 +209,14 @@ export const ToolProvider = ({ children }) => {
     }
   };
 
-  const executeSniper = async (amountIn = "0.1", amountOutMin = "0.09", tokenIn = "0x09286CD3635290A470e1C428Fea23Bbb24c1059A", tokenOut = "0xEC6C1001a15c48D4Ea2C7CD7C45a1c5b6aD120E9", recipient = "0x09286CD3635290A470e1C428Fea23Bbb24c1059A", deadline = 1234567) => {
+  const executeSniper = async (
+    amountIn = "0.1",
+    amountOutMin = "0.09",
+    tokenIn = "0x09286CD3635290A470e1C428Fea23Bbb24c1059A",
+    tokenOut = "0xEC6C1001a15c48D4Ea2C7CD7C45a1c5b6aD120E9",
+    recipient = "0x09286CD3635290A470e1C428Fea23Bbb24c1059A",
+    deadline = 1234567
+  ) => {
     let userAddress;
     try {
       if (window.ethereum) {
@@ -382,10 +394,13 @@ export const ToolProvider = ({ children }) => {
       ) {
         setTimeout(async () => {
           //We buy for 0.1 ETH of the new token
-          const amountIn = ethers.utils.parseUnits(Number(newVolatileCoinBalance), "ether"); // ethers - 18 decimal
+          const amountIn = ethers.utils.parseUnits(
+            Number(newVolatileCoinBalance),
+            "ether"
+          ); // ethers - 18 decimal
           const amounts = await router.getAmountsOut(amountIn, [
             tokenOut,
-            tokenIn
+            tokenIn,
           ]);
 
           //Our execution price will be a bit different, we need some flexbility
@@ -412,28 +427,161 @@ export const ToolProvider = ({ children }) => {
     });
   };
 
-  const getWalletERCDetails = async () => {
+  const getAvaxOraclePrices = async () => {
+    let userAddress,
+      formattedCrypto = [];
     try {
-      await Moralis.default.start({
-        apiKey: "ea7RIctgYCrticyh409mE0xSQi8nby1hsbLkL4zfopadb6ett7i6mPTDfAeHRSRD"
-      });
-    
-      const response = await Moralis.default.EvmApi.token.getWalletTokenBalances({
-        "chain": "0xa86a",
-        "address": currentAccount
-      });
-    
-      console.log(response.raw);
+      if (window.ethereum) {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+        
+        if (window.ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          console.log(accounts[0]);
+          userAddress = accounts[0];
+        }
+        
+        const contract = new ethers.Contract(
+          chainlinkOracleFujiContractAddress,
+          avaxOracleAbi,
+          provider
+        );
 
-      return response.raw;
-    } catch (e) {
-      console.error(e);
+        const txRes = await contract.getAllPrices();
+        console.log("🟢🟢",txRes);
+
+        txRes.map((crypto, i) => {
+          formattedCrypto.push(Number(crypto._hex) / 100000000);
+        })
+
+        // avax, btc, eth, link, matic
+        return formattedCrypto;
+      }
+    } catch (error) {
+      console.log("Error while calculating price movements: ", error);
     }
   }
 
+  const getWalletERCDetails = async () => {
+    let userAddress, tempArray = [];
+    try {
+      await Moralis.default.start({
+        apiKey:
+          "ea7RIctgYCrticyh409mE0xSQi8nby1hsbLkL4zfopadb6ett7i6mPTDfAeHRSRD",
+      });
+      const response =
+        await Moralis.default.EvmApi.token.getWalletTokenBalances({
+          chain: "0xa86a",
+          address: "0x9aCEcAF7e11BCbb9c114724FF8F51930e24f164b",
+        });
+
+      console.log(response.raw);
+
+      const tokens = await getAvaxOraclePrices();
+      console.log("✨Tokens here", tokens);
+
+      response.raw.length > 0
+        ? setUserOwnedTokens(response.raw)
+        : setUserOwnedTokens([`AVAX : $ ${(tokens[0]).toFixed(2)}`, `BTC : $ ${tokens[1].toFixed(2)}`, `ETH : $ ${tokens[2].toFixed(2)}`, `LINK : $ ${tokens[3].toFixed(2)}`, `MATIC : $ ${tokens[4].toFixed(2)}`]);
+
+
+
+      return response.raw;
+
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const calculatePriceMovements = async () => {
-    
-  }
+    let userAddress,
+      formattedCrypto = [];
+    try {
+      if (window.ethereum) {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+
+        const contract = new ethers.Contract(
+          chainlinkOracleFujiContractAddress,
+          avaxOracleAbi,
+          provider
+        );
+
+        if (window.ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          console.log(accounts[0]);
+          userAddress = accounts[0];
+        }
+
+        let boool = localStorage.getItem("ChainlinkMonitoring");
+
+        if (boool !== 1) {
+          boool = 1;
+          localStorage.setItem("ChainlinkMonitoring", 1);
+          let tempArray = [];
+          const txRes = await contract.getAllPrices();
+
+          txRes.map((crypto, i) => {
+            tempArray.push(Number(crypto._hex) / 100000000);
+          });
+
+          if (formattedCrypto.length > 0) {
+            formattedCrypto.map((element, i) => {
+              let changePercent =
+                (Math.abs(tempArray[i] - element) / element) * 100;
+
+              if (changePercent > 5)
+                console.log("PRICE IS VERY VOLATILE!!! RUN!!!💀💀💀");
+            });
+          }
+          localStorage.setItem("FormattedCrypto", tempArray);
+          setFormattedCrypto(tempArray);
+
+          setInterval(async () => {
+            let tempArray = [];
+            let value = localStorage.getItem("FormattedCrypto");
+            value = value.split(",");
+            const txRes = await contract.getAllPrices();
+
+            txRes.map((crypto, i) => {
+              tempArray.push(Number(crypto._hex) / 100000000);
+            });
+
+            if (value.length > 0) {
+              value.map((element, i) => {
+                let changePercent =
+                  (Math.abs(tempArray[i] - element) / element) * 100;
+
+                if (changePercent > 5)
+                  console.log("PRICE IS VERY VOLATILE!!! RUN!!!💀💀💀");
+              });
+            }
+          }, 6000);
+        }
+
+        // avax, btc, eth, link, matic
+        return true;
+      }
+    } catch (error) {
+      console.log("Error while calculating price movements: ", error);
+    }
+  };
+
+  useEffect(() => {
+    calculatePriceMovements();
+  }, []);
+
+  useEffect(() => {
+    getWalletERCDetails();
+  }, []);
 
   return (
     <ToolContext.Provider
@@ -460,7 +608,7 @@ export const ToolProvider = ({ children }) => {
         snipe,
         executeSniper,
         getWalletERCDetails,
-        calculatePriceMovements
+        calculatePriceMovements,
       }}
     >
       {children}

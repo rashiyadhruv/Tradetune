@@ -31,16 +31,6 @@ const Creativity = ({}: CreativityProps) => (
                     </div>
                     <div className={styles.wrap}>
                         <div className={styles.content}>{item.content}</div>
-                        <Link href={item.url}>
-                            <a
-                                className={cn(
-                                    "button-stroke button-medium",
-                                    styles.button
-                                )}
-                            >
-                                learn more
-                            </a>
-                        </Link>
                     </div>
                 </div>
             ))}

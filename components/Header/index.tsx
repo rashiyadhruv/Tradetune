@@ -41,6 +41,7 @@ const Header = ({ className, noRegistration, light, empty }: HeaderProps) => {
 
   const { connectWallet, checkIfWalletIsConnect, currentAccount } =
     useContext(ToolContext);
+
   useEffect(() => {
     let result = checkIfWalletIsConnect();
     if (result) {
@@ -85,13 +86,11 @@ const Header = ({ className, noRegistration, light, empty }: HeaderProps) => {
                 styles.button,
                 styles.connect
               )}
-              onClick={() => (registration ? " " : setConnect(true))}
+              onClick={() => (currentAccount ? " " : setConnect(true))}
             >
-              {registration
-                ? currentAccount.toString().slice(0, 6) +
-                  "..." +
-                  currentAccount.toString().slice(-4)
-                : "connect wallet"}
+              {currentAccount
+                ? `${currentAccount.toString().slice(0, 6)}...${currentAccount.toString().slice(-4)}`
+                : "Connect Wallet"}
             </button>
             <Link href="/notification">
               <a className={cn(styles.notification, styles.active)}>

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
-// import { ethers } from "ethers";
-// import Web3Modal from "web3modal";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 import Tool from "./contract.json";
 import RenderResult from "next/dist/server/render-result";
 
@@ -14,6 +14,7 @@ export const ToolProvider = ({ children }) => {
   const [snipeProfit, setSnipeProfit] = useState(null);
   const [snipeChain, setSnipeChain] = useState("Ethereum");
   const [currentAccount, setCurrentAccount] = useState("");
+  
   useEffect(() => {
     (async () => {})();
   }, []);
@@ -50,6 +51,8 @@ export const ToolProvider = ({ children }) => {
       console.log("No accounts found");
     }
   };
+
+
 
   return (
     <ToolContext.Provider

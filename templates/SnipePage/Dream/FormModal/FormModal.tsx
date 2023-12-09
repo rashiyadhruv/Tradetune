@@ -5,6 +5,7 @@ import Information from "./Information";
 import { useState, useContext } from "react";
 import cn from "classnames";
 import ToolContext from "context/toolContext";
+
 type FormModalProps = {
   onSuccess: any;
 };
@@ -18,11 +19,17 @@ const FormModal = ({ onSuccess }: FormModalProps) => {
     setSnipeProfit,
     snipeChain,
     setSnipeChain,
+    initiateSniper,
+    approveToken,
+    executeSniper
   } = useContext(ToolContext);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (snipeFund !== null && snipeProfit !== null && snipeChain !== null) {
       console.log(snipeFund, snipeProfit, snipeChain);
+      const approveRes = await approveToken();
+      const response = await initiateSniper();
+      const res = await executeSniper();
       alert("Sniping started");
       onSuccess();
     } else {

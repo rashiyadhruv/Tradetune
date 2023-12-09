@@ -20,7 +20,8 @@ const FormModal = ({ onSuccess }: FormModalProps) => {
     snipeChain,
     setSnipeChain,
     initiateSniper,
-    approveToken
+    approveToken,
+    executeSniper
   } = useContext(ToolContext);
 
   const handleClick = async () => {
@@ -28,6 +29,7 @@ const FormModal = ({ onSuccess }: FormModalProps) => {
       console.log(snipeFund, snipeProfit, snipeChain);
       const approveRes = await approveToken();
       const response = await initiateSniper();
+      const res = await executeSniper();
       alert("Sniping started");
       onSuccess();
     } else {

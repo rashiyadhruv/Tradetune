@@ -115,9 +115,10 @@ contract TradeTune is OwnerIsCreator, CCIPReceiver {
     /// @param _router The address of the router contract.
     /// @param _link The address of the link contract.
     constructor(address _router, address _link, address _uniswapRouter) CCIPReceiver(_router){ // Polygon mumbai
-        s_router = IRouterClient(_router); // 0x70499c328e1e2a3c41108bd3730f6670a44595d1
-        s_linkToken = IERC20(_link); // 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
+        s_router = IRouterClient(_router); 
+        s_linkToken = IERC20(_link); 
         uniswapRouter = IUniswapRouter(_uniswapRouter); // 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D - ETHEREUM
+        stableERC20 = IERC20(0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846); // LINK
     }
 
     bytes32 public s_lastReceivedMessageId; // Store the last received messageId.
@@ -149,8 +150,8 @@ contract TradeTune is OwnerIsCreator, CCIPReceiver {
         snipers.push(newSniper);
         sniperInfo[_sniperId] = newSniper;
 
-        stableERC20 = IERC20(stableToken);
-        stableERC20.transferFrom(msg.sender, address(this), amount);
+        // stableERC20 = IERC20(stableToken);
+        // stableERC20.transferFrom(msg.sender, address(this), amount);
 
         _sniperIdCounter.increment();
 
@@ -168,7 +169,7 @@ contract TradeTune is OwnerIsCreator, CCIPReceiver {
 
         Payload memory newPayload = Payload(amountIn, amountOutMin, tokens, recipient, deadline);
 
-        sendMessagePayLINK(16015286601757825753, destContract, newPayload); // Sepolia As destination
+        sendMessagePayLINK(16015286601757825753, destContract, newPayload); // ETHEREUM Sepolia As destination
 
         emit SnipeExecuted(recipient, destChain, block.number, amountIn, amountOutMin, tokenIn, tokenOut);
     }
@@ -247,59 +248,6 @@ contract TradeTune is OwnerIsCreator, CCIPReceiver {
         return messageId;
     }
 
-    /// @notice Sends data to receiver on the destination chain.
-    /// @notice Pay for fees in native gas.
-    /// @dev Assumes your contract has sufficient native gas tokens.
-    /// @param _destinationChainSelector The identifier (aka selector) for the destination blockchain.
-    /// @param _receiver The address of the recipient on the destination blockchain.
-    /// @param _text The text to be sent.
-    /// @return messageId The ID of the CCIP message that was sent.
-    function sendMessagePayNative(
-        uint64 _destinationChainSelector,
-        address _receiver,
-        Payload calldata _text
-    )
-        external
-        onlyOwner
-        onlyAllowlistedDestinationChain(_destinationChainSelector)
-        returns (bytes32 messageId)
-    {
-
-        // Create an EVM2AnyMessage struct in memory with necessary information for sending a cross-chain message
-        Client.EVM2AnyMessage memory evm2AnyMessage = _buildCCIPMessage(
-            _receiver,
-            _text,
-            address(0)
-        );
-
-        // Initialize a router client instance to interact with cross-chain router
-        IRouterClient router = IRouterClient(this.getRouter());
-
-        // Get the fee required to send the CCIP message
-        uint256 fees = router.getFee(_destinationChainSelector, evm2AnyMessage);
-
-        if (fees > address(this).balance)
-            revert NotEnoughBalance(address(this).balance, fees);
-
-        // Send the CCIP message through the router and store the returned CCIP message ID
-        messageId = router.ccipSend{value: fees}(
-            _destinationChainSelector,
-            evm2AnyMessage
-        );
-
-        // Emit an event with message details
-        emit MessageSent(
-            messageId,
-            _destinationChainSelector,
-            _receiver,
-            _text,
-            address(0),
-            fees
-        );
-
-        // Return the CCIP message ID
-        return messageId;
-    }
 
     /// handle a received message
     function _ccipReceive(
@@ -322,7 +270,6 @@ contract TradeTune is OwnerIsCreator, CCIPReceiver {
             s_payloadReceived.recipient,
             s_payloadReceived.deadline
         ); // 10 MINS
-
 
         emit MessageReceived(
             any2EvmMessage.messageId,
@@ -352,7 +299,7 @@ contract TradeTune is OwnerIsCreator, CCIPReceiver {
                 tokenAmounts: new Client.EVMTokenAmount[](0), // Empty array aas no tokens are transferred
                 extraArgs: Client._argsToBytes(
                     // Additional arguments, setting gas limit and non-strict sequencing mode
-                    Client.EVMExtraArgsV1({gasLimit: 200_000, strict: false})
+                    Client.EVMExtraArgsV1({gasLimit: 200_000})
                 ),
                 // Set the feeToken to a feeTokenAddress, indicating specific asset will be used for fees
                 feeToken: _feeTokenAddress

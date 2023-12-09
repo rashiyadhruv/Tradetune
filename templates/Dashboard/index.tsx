@@ -33,7 +33,7 @@ const Dashboard = () => {
       >
         <></>
       </Description>
-      <Logs type="highlights    " />
+      <Logs type="highlights" />
       <Dream />
       <Logs type="stoploss" />
     </Layout>

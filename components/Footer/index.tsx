@@ -13,7 +13,7 @@ const Footer = ({}: FooterProps) => (
         <div className={styles.body}>
             <div className={styles.details}>
                 <Logo className={styles.logo} />
-                <div className={styles.info}>Empower your creativity.</div>
+                <div className={styles.info}>Empower your trading experience.</div>
             </div>
             <div className={styles.group}>
                 {footerNavigation.map((item, index) => (

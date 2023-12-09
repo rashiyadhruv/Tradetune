@@ -41,6 +41,7 @@ const Header = ({ className, noRegistration, light, empty }: HeaderProps) => {
 
   const { connectWallet, checkIfWalletIsConnect, currentAccount } =
     useContext(ToolContext);
+
   useEffect(() => {
     let result = checkIfWalletIsConnect();
     if (result) {

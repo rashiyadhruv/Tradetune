@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
-// import { ethers } from "ethers";
-// import Web3Modal from "web3modal";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 import Tool from "./contract.json";
 import RenderResult from "next/dist/server/render-result";
 

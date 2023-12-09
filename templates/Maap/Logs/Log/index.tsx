@@ -23,14 +23,24 @@ const Log = ({ item, index }: LogProps) => {
           />
         </div>
         <div className={styles.details}>
-          <div className={styles.name}>{item.volume}</div>
+          <div className={styles.name}>{item.token}</div>
           <div className={styles.sale}>
-            Action : <span>{item.buysell}</span>
+            UserAddress :{" "}
+            <span>
+              {item.buysell.slice(0, 6)} ... {item.buysell.slice(-5)}
+            </span>
           </div>
         </div>
       </div>
       <div className={styles.info}>
         <div className={styles.price}>{item.volume}</div>
+      </div>
+      <div className={styles.info}>
+        <div className={styles.price}>
+          {item.speculatedEffect?.slice(0, 10)}
+          {"  "}
+          {item.speculatedEffect?.slice(11, -2)}
+        </div>
       </div>
       <div className={styles.info}>
         <div className={styles.price}>{item.speculatedEffect}</div>

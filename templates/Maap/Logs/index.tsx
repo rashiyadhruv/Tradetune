@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import cn from "classnames";
 import styles from "./Logs.module.sass";
 import Tabs from "@/components/Tabs";
@@ -10,6 +10,14 @@ import { maap } from "@/mocks/maap";
 type LogsProps = {};
 
 const Logs = ({}: LogsProps) => {
+  const [finallogs, setFinallogs] = useState(maap);
+  useEffect(() => {
+    let data = localStorage.getItem("MAAP_LOGS");
+    console.log("asdasdad", data);
+    if (data) {
+      setFinallogs(JSON.parse(data));
+    }
+  }, []);
   return (
     <div className={styles.row}>
       <div className={styles.col}>
@@ -19,10 +27,11 @@ const Logs = ({}: LogsProps) => {
           <div className={styles.caption}>#</div>
           <div className={styles.caption}>Token</div>
           <div className={styles.caption}>Volume</div>
+          <div className={styles.caption}>TimeStamp</div>
           <div className={styles.caption}>Speculated effect</div>
         </div>
         <div className={styles.artists}>
-          {maap.map((log, index) => (
+          {finallogs.map((log, index) => (
             <Log item={log} key={index} index={index} />
           ))}
         </div>

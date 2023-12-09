@@ -424,13 +424,15 @@ export const ToolProvider = ({ children }) => {
       });
     
       console.log(response.raw);
+
+      return response.raw;
     } catch (e) {
       console.error(e);
     }
   }
 
   const calculatePriceMovements = async () => {
-
+    
   }
 
   return (

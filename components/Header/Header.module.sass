@@ -114,16 +114,13 @@
 .col
     display: flex
     align-items: center
-    flex: 0 0 50%
+    flex: 0 0 49%
     height: rem(96)
     border-bottom: rem(1) solid $n3
     transition: border-color .2s
-    +t
-        flex: auto
-        height: auto
-        border: none
     &:nth-child(1)
         padding-right: rem(32)
+         flex: 0 0 30%
         +t
             margin-right: auto
             padding-right: 0
@@ -176,6 +173,8 @@
 
 .connect
     display: none
+    font-size: rem(10)
+    width: rem(200)
     margin-left: rem(60)
     +w
         margin-left: rem(48)

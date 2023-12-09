@@ -86,11 +86,15 @@ const Header = ({ className, noRegistration, light, empty }: HeaderProps) => {
                 styles.button,
                 styles.connect
               )}
-              onClick={() => (currentAccount ? " " : setConnect(true))}
+              onClick={() =>
+                registration && currentAccount !== "" ? "" : setConnect(true)
+              }
             >
-              {currentAccount
-                ? `${currentAccount.toString().slice(0, 6)}...${currentAccount.toString().slice(-4)}`
-                : "Connect Wallet"}
+              {registration && currentAccount !== ""
+                ? currentAccount.toString().slice(0, 6) +
+                  "..." +
+                  currentAccount.toString().slice(-4)
+                : "connect wallet"}
             </button>
             <Link href="/notification">
               <a className={cn(styles.notification, styles.active)}>

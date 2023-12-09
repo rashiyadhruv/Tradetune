@@ -85,9 +85,11 @@ const Header = ({ className, noRegistration, light, empty }: HeaderProps) => {
                 styles.button,
                 styles.connect
               )}
-              onClick={() => (registration ? " " : setConnect(true))}
+              onClick={() =>
+                registration && currentAccount !== "" ? "" : setConnect(true)
+              }
             >
-              {registration
+              {registration && currentAccount !== ""
                 ? currentAccount.toString().slice(0, 6) +
                   "..." +
                   currentAccount.toString().slice(-4)

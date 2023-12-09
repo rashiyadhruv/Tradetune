@@ -13,7 +13,42 @@ export const ToolProvider = ({ children }) => {
   const [snipeFund, setSnipeFund] = useState(null);
   const [snipeProfit, setSnipeProfit] = useState(null);
   const [snipeChain, setSnipeChain] = useState("Ethereum");
+  const [stoplossPercentLow, setStoplossPercentLow] = useState(null);
+  const [stoplossPercentToken, setStoplossPercentToken] = useState(null);
   const [currentAccount, setCurrentAccount] = useState("");
+  const [userOwnedTokens, setUserOwnedTokens] = useState([
+    "ETH",
+    "BNB",
+    "FIL",
+    "ADA",
+    "DOT",
+    "SOL",
+    "LUNA",
+    "AVAX",
+    "UNI",
+    "LINK",
+    "MATIC",
+    "XRP",
+    "DOGE",
+  ]);
+  const [watchListTokens, setWatchListTokens] = useState([
+    "SAND",
+    "ANKR",
+    "RLC",
+    "LRC",
+    "BAND",
+    "OCEAN",
+    "CVC",
+    "STORJ",
+    "SKL",
+    "LIT",
+    "BOND",
+    "TRB",
+    "ANT",
+    "MLN",
+    "DNT",
+    "REP",
+  ]);
   useEffect(() => {
     (async () => {})();
   }, []);
@@ -63,6 +98,14 @@ export const ToolProvider = ({ children }) => {
         setSnipeProfit,
         snipeChain,
         setSnipeChain,
+        userOwnedTokens,
+        setUserOwnedTokens,
+        watchListTokens,
+        setWatchListTokens,
+        stoplossPercentLow,
+        setStoplossPercentLow,
+        stoplossPercentToken,
+        setStoplossPercentToken,
       }}
     >
       {children}

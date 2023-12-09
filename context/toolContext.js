@@ -7,14 +7,28 @@ import RenderResult from "next/dist/server/render-result";
 import ERC20 from "./ERC20.json";
 import contract from "./contract.json";
 
+import celoOracle from "./celoOracle.json"
+import avaxOracle from "./avaxOracle.json"
+
+const Moralis = require('moralis');
+
 export const ToolContext = createContext();
 
 // AVAX
 const contractAddress = "0xEC6C1001a15c48D4Ea2C7CD7C45a1c5b6aD120E9"; // sender
 const contractAddressSepolia = "0x09286CD3635290A470e1C428Fea23Bbb24c1059A"; // receiver
-const contractAbi = contract.abi;
 const linkErc20ContractAddress = "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846";
+
+
+const contractAddressCelo = "0x2849CA671e7029BD66Fa119d418a498713927bE7"; // receiver
+
+const chainlinkOracleFujiContractAddress = "0x96a32d50727DB289555b12c807Ec2e3e69FCd7D1";
+const chainlinkOracleCeloContractAddress = "0xd4e6eC0202F1960dA896De13089FF0e4A07Db4E9";
+
+const contractAbi = contract.abi;
 const erc20Abi = ERC20.abi;
+const avaxOracleAbi = avaxOracle.abi;
+const celoOracleAbi = celoOracle.abi;
 
 const addresses = {
   USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // decimal - 6
@@ -398,6 +412,29 @@ export const ToolProvider = ({ children }) => {
     });
   };
 
+  const getWalletERCDetails = async () => {
+    try {
+      await Moralis.default.start({
+        apiKey: "ea7RIctgYCrticyh409mE0xSQi8nby1hsbLkL4zfopadb6ett7i6mPTDfAeHRSRD"
+      });
+    
+      const response = await Moralis.default.EvmApi.token.getWalletTokenBalances({
+        "chain": "0xa86a",
+        "address": currentAccount
+      });
+    
+      console.log(response.raw);
+
+      return response.raw;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  const calculatePriceMovements = async () => {
+    
+  }
+
   return (
     <ToolContext.Provider
       value={{
@@ -421,7 +458,9 @@ export const ToolProvider = ({ children }) => {
         initiateSniper,
         approveToken,
         snipe,
-        executeSniper
+        executeSniper,
+        getWalletERCDetails,
+        calculatePriceMovements
       }}
     >
       {children}

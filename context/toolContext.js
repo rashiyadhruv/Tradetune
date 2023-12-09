@@ -10,6 +10,9 @@ const contractAddress = "";
 const contractAbi = Tool.abi;
 
 export const ToolProvider = ({ children }) => {
+  const [snipeFund, setSnipeFund] = useState(null);
+  const [snipeProfit, setSnipeProfit] = useState(null);
+  const [snipeChain, setSnipeChain] = useState("Ethereum");
   const [currentAccount, setCurrentAccount] = useState("");
   useEffect(() => {
     (async () => {})();
@@ -54,6 +57,12 @@ export const ToolProvider = ({ children }) => {
         connectWallet,
         checkIfWalletIsConnect,
         currentAccount,
+        snipeFund,
+        setSnipeFund,
+        snipeProfit,
+        setSnipeProfit,
+        snipeChain,
+        setSnipeChain,
       }}
     >
       {children}

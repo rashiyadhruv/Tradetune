@@ -13,12 +13,16 @@ import { resultSearch } from "@/mocks/resultSearch";
 
 const menu = [
   {
-    title: "Bots",
-    url: "/discover",
+    title: "Snipe",
+    url: "/snipe",
   },
   {
     title: "Dashboard",
-    url: "/feed",
+    url: "/dashboard",
+  },
+  {
+    title: "M.A.A.P.",
+    url: "/maap",
   },
 ];
 

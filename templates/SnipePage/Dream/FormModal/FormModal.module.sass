@@ -1,0 +1,53 @@
+@import @/styles/helpers
+
+.row
+    display: flex
+    flex-grow: 1
+    overflow: hidden
+    +t
+        display: block
+
+.col
+    display: flex
+    flex-direction: column
+    flex: 0 0 50%
+    width: 50%
+    padding: rem(80)
+    +xl
+        padding: rem(64)
+    +w
+        padding: rem(40)
+    +t
+        width: 100%
+        padding: rem(40) rem(24)
+    &:nth-child(2)
+        margin-top: rem(40)
+        
+
+.logo
+    margin-bottom: auto
+    +t
+        margin: 0 0 rem(40)
+
+.line
+    display: flex
+    justify-content: space-between
+    margin-bottom: rem(24)
+    +m
+        display: block
+
+.arrow
+    margin: rem(8) 0 0 rem(20)
+    +m
+        margin: rem(24) 0 0
+
+.info
+    max-width: rem(450)
+    +body1
+    +w
+        +body1M
+    +m
+        +body1S
+
+.button
+    cursor: pointer

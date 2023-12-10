@@ -10,19 +10,19 @@ import Search from "../Search";
 const socials = [
   {
     icon: "instagram-fat",
-    url: "https://www.instagram.com/ui8net/",
+    url: "https://www.instagram.com/",
   },
   {
     icon: "twitter-fat",
-    url: "https://twitter.com/ui8",
+    url: "https://twitter.com",
   },
   {
     icon: "facebook-fat",
-    url: "https://www.facebook.com/ui8.net/",
+    url: "https://www.facebook.com/",
   },
   {
     icon: "linkedin-fat",
-    url: "https://www.linkedin.com/company/ui8",
+    url: "https://www.linkedin.com/company",
   },
 ];
 

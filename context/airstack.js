@@ -15,7 +15,7 @@ export const query1 = async () => {
   let query1 = `
 query MyQuery {
   Ethereum: TokenTransfers(
-    input: {filter: {formattedAmount: {_gt: 10000000}}, blockchain: ethereum, limit: 50}
+    input: {filter: {formattedAmount: {_gt: 10000000}}, blockchain: ethereum, limit: 20}
   ) {
     TokenTransfer {
       from {
@@ -44,7 +44,7 @@ query MyQuery {
     }
   }
   Polygon: TokenTransfers(
-    input: {filter: {formattedAmount: {_gt: 10000}}, blockchain: polygon, limit: 50}
+    input: {filter: {formattedAmount: {_gt: 10000000}}, blockchain: polygon, limit: 20}
   ) {
     TokenTransfer {
       from {
@@ -73,7 +73,7 @@ query MyQuery {
     }
   }
   Base: TokenTransfers(
-    input: {filter: {formattedAmount: {_gt: 10000}}, blockchain: base, limit: 50}
+    input: {filter: {formattedAmount: {_gt: 10000000}}, blockchain: base, limit: 20}
   ) {
     TokenTransfer {
       from {
@@ -125,18 +125,17 @@ query MyQuery {
   localStorage.setItem("whalesData", JSON.stringify(finalData));
   let boool = localStorage.getItem("whalesMonitring");
 
-  if (boool !== 1) {
-    boool = 1;
-    localStorage.setItem("whalesMonitring", 1);
-    await query2();
+  boool = 1;
+  localStorage.setItem("whalesMonitring", 1);
+  await query2();
 
-    setInterval(async () => {
-      await query2();
-    }, 60000);
-  }
+  setInterval(async () => {
+    await query2();
+  }, 60000);
 };
 
 export const query2 = async () => {
+  console.log("sdfsdfsdvsdv");
   let data = localStorage.getItem("whalesData");
   data = JSON.parse(data);
   let finallogs = data.map(async (tx) => {

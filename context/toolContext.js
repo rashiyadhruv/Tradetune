@@ -27,7 +27,8 @@ const chainlinkOracleFujiContractAddress =
 const chainlinkOracleCeloContractAddress =
   "0xd4e6eC0202F1960dA896De13089FF0e4A07Db4E9";
 
-const tradeTuneEventsContractAddress = "0x332Ad58ccAF79b3681b600E81d1663103C64c29F"
+const tradeTuneEventsContractAddress =
+  "0x332Ad58ccAF79b3681b600E81d1663103C64c29F";
 
 const contractAbi = contract.abi;
 const erc20Abi = ERC20.abi;
@@ -127,7 +128,7 @@ export const ToolProvider = ({ children }) => {
         const signer = provider.getSigner();
 
         const contract = new ethers.Contract(
-          tradeTuneEventsContractAddress, 
+          tradeTuneEventsContractAddress,
           tradeTuneEventsAbi,
           signer
         );
@@ -140,10 +141,9 @@ export const ToolProvider = ({ children }) => {
           userAddress = accounts[0];
         }
 
-        const txRes = await contract.addStopLoss(
-          stoplossPercentLow,
-          { gasLimit: 500000 }
-        );
+        const txRes = await contract.addStopLoss(stoplossPercentLow, {
+          gasLimit: 500000,
+        });
 
         await txRes.wait(1);
 
@@ -587,7 +587,7 @@ export const ToolProvider = ({ children }) => {
           setInterval(async () => {
             let tempArray = [];
             let value = localStorage.getItem("FormattedCrypto");
-            value = value.split(",");
+            value = value?.split(",");
             const txRes = await contract.getAllPrices();
 
             txRes.map((crypto, i) => {
@@ -608,9 +608,13 @@ export const ToolProvider = ({ children }) => {
                   var d2 = new Date(Date.now() - 60000);
                   var t2 = d2.toLocaleTimeString();
                   let ft = t.toString() + " - " + t2.toString();
+                  let hiii = [];
+                  if (highs !== null) {
+                    hiii = highs;
+                  }
 
                   let final = [
-                    ...highs,
+                    ...hiii,
                     {
                       id: highs.length + 1,
                       token: userOwnedTokens[i].split(":")[0],
@@ -624,8 +628,12 @@ export const ToolProvider = ({ children }) => {
                     console.log("STOPLOSS TRIGGERED!!!💀💀💀");
                     let stoploss = localStorage.getItem("stoploss");
                     let stoplosses = JSON.parse(stoploss);
+                    let sl = [];
+                    if (stoplosses !== null) {
+                      sl = stoplosses;
+                    }
                     let final = [
-                      ...stoplosses,
+                      ...sl,
                       {
                         id: stoplosses.length + 1,
                         token: userOwnedTokens[i].split(":")[0],
@@ -686,7 +694,7 @@ export const ToolProvider = ({ children }) => {
         executeSniper,
         getWalletERCDetails,
         calculatePriceMovements,
-        addStopLoss
+        addStopLoss,
       }}
     >
       {children}

@@ -9,6 +9,7 @@ import contract from "./contract.json";
 
 import celoOracle from "./celoOracle.json";
 import avaxOracle from "./avaxOracle.json";
+import tradeTune from "./tradeTune.json";
 
 const Moralis = require("moralis");
 
@@ -26,10 +27,13 @@ const chainlinkOracleFujiContractAddress =
 const chainlinkOracleCeloContractAddress =
   "0xd4e6eC0202F1960dA896De13089FF0e4A07Db4E9";
 
+const tradeTuneEventsContractAddress = "0x332Ad58ccAF79b3681b600E81d1663103C64c29F"
+
 const contractAbi = contract.abi;
 const erc20Abi = ERC20.abi;
 const avaxOracleAbi = avaxOracle.abi;
 const celoOracleAbi = celoOracle.abi;
+const tradeTuneEventsAbi = tradeTune.abi;
 
 const addresses = {
   USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // decimal - 6
@@ -118,6 +122,46 @@ export const ToolProvider = ({ children }) => {
       setCurrentAccount(accounts[0]);
     } else {
       console.log("No accounts found");
+    }
+  };
+
+  const addStopLoss = async () => {
+    let userAddress;
+    try {
+      if (window.ethereum) {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+
+        const contract = new ethers.Contract(
+          tradeTuneEventsContractAddress, 
+          tradeTuneEventsAbi,
+          signer
+        );
+
+        if (window.ethereum.isConnected()) {
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          console.log(accounts[0]);
+          userAddress = accounts[0];
+        }
+
+        const txRes = await contract.addStopLoss(
+          stoplossPercentLow,
+          { gasLimit: 500000 }
+        );
+
+        await txRes.wait(1);
+
+        console.log("Stoploss Fn: ", txRes);
+
+        return true;
+      }
+    } catch (error) {
+      console.log("Approve Token Error🔴: ", error);
+      alert("Approve Token Error!!");
     }
   };
 
@@ -609,6 +653,7 @@ export const ToolProvider = ({ children }) => {
         executeSniper,
         getWalletERCDetails,
         calculatePriceMovements,
+        addStopLoss
       }}
     >
       {children}

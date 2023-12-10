@@ -16,12 +16,14 @@ const FormModal = ({ onSuccess }: FormModalProps) => {
     setStoplossPercentLow,
     stoplossPercentToken,
     setStoplossPercentToken,
+    addStopLoss
   } = useContext(ToolContext);
 
-  const handleClick = () => {
+  const handleClick =async () => {
     if (stoplossPercentLow !== null && stoplossPercentToken !== null) {
       alert("Started monitoring");
-      onSuccess();
+      const res = await addStopLoss();
+      if (res) onSuccess();
     } else {
       alert("Please fill all the fields");
     }

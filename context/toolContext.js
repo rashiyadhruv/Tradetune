@@ -616,7 +616,7 @@ export const ToolProvider = ({ children }) => {
                   let final = [
                     ...hiii,
                     {
-                      id: highs.length + 1,
+                      id: hiii?.length + 1,
                       token: userOwnedTokens[i].split(":")[0],
                       change: changePercent + "%",
                       time: "1 min",
@@ -635,7 +635,7 @@ export const ToolProvider = ({ children }) => {
                     let final = [
                       ...sl,
                       {
-                        id: stoplosses.length + 1,
+                        id: sl?.length + 1,
                         token: userOwnedTokens[i].split(":")[0],
                         soldat: tempArray[i],
                         amount: stoplossPercentToken + "%",

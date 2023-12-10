@@ -43,35 +43,6 @@ query MyQuery {
       formattedAmount
     }
   }
-  Polygon: TokenTransfers(
-    input: {filter: {formattedAmount: {_gt: 10000000}}, blockchain: polygon, limit: 20}
-  ) {
-    TokenTransfer {
-      from {
-        identity
-        socials {
-          profileName
-          profileDisplayName
-          profileBio
-          profileImage
-        }
-      }
-      to {
-        identity
-        socials {
-          profileName
-          profileDisplayName
-          profileBio
-          profileImage
-        }
-      }
-      token {
-        name
-        address
-      }
-      formattedAmount
-    }
-  }
   Base: TokenTransfers(
     input: {filter: {formattedAmount: {_gt: 10000000}}, blockchain: base, limit: 20}
   ) {
@@ -124,14 +95,15 @@ query MyQuery {
   let finalData = whalesData.flat().filter((tx) => tx !== null);
   localStorage.setItem("whalesData", JSON.stringify(finalData));
   let boool = localStorage.getItem("whalesMonitring");
-
-  boool = 1;
-  localStorage.setItem("whalesMonitring", 1);
-  await query2();
-
-  setInterval(async () => {
+  if (boool !== "1") {
+    boool = 1;
+    localStorage.setItem("whalesMonitring", 1);
     await query2();
-  }, 60000);
+
+    setInterval(async () => {
+      await query2();
+    }, 60000);
+  }
 };
 
 export const query2 = async () => {
@@ -143,29 +115,6 @@ export const query2 = async () => {
 query MyQuery($from: Identity, $address: Address) {
   Ethereum: TokenTransfers(
     input: {filter: {tokenAddress: {_eq: $address}, from: {_eq: $from}}, blockchain: ethereum, limit: 50}
-  ) {
-    TokenTransfer {
-      from {
-        identity
-      }
-      to {
-        identity
-      }
-      tokenAddress
-      amount
-      formattedAmount
-      tokenId
-      tokenType
-      transactionHash
-      blockTimestamp
-      blockNumber
-      token {
-        name
-      }
-    }
-  }
-  Polygon: TokenTransfers(
-    input: {filter: {tokenAddress: {_eq: $address}, from: {_eq: $from}}, blockchain: polygon, limit: 50}
   ) {
     TokenTransfer {
       from {
@@ -244,4 +193,5 @@ query MyQuery($from: Identity, $address: Address) {
   finallogs = await Promise.all(finallogs);
   console.log(finallogs);
   localStorage.setItem("MAAP_LOGS", JSON.stringify(finallogs.slice(0, 10)));
+  window.location.reload();
 };

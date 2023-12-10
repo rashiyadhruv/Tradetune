@@ -44,8 +44,8 @@ export const ToolProvider = ({ children }) => {
   const [snipeFund, setSnipeFund] = useState(0);
   const [snipeProfit, setSnipeProfit] = useState(0);
   const [snipeChain, setSnipeChain] = useState("Ethereum");
-  const [stoplossPercentLow, setStoplossPercentLow] = useState(null);
-  const [stoplossPercentToken, setStoplossPercentToken] = useState(null);
+  const [stoplossPercentLow, setStoplossPercentLow] = useState(0.001);
+  const [stoplossPercentToken, setStoplossPercentToken] = useState(50);
   const [currentAccount, setCurrentAccount] = useState("");
   const [userOwnedTokens, setUserOwnedTokens] = useState([
     "ETH",
@@ -393,7 +393,6 @@ export const ToolProvider = ({ children }) => {
         Number(newVolatileCoinBalance) > 0
       ) {
         setTimeout(async () => {
-          //We buy for 0.1 ETH of the new token
           const amountIn = ethers.utils.parseUnits(
             Number(newVolatileCoinBalance),
             "ether"
@@ -436,7 +435,7 @@ export const ToolProvider = ({ children }) => {
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
-        
+
         if (window.ethereum.isConnected()) {
           const accounts = await window.ethereum.request({
             method: "eth_accounts",
@@ -444,7 +443,7 @@ export const ToolProvider = ({ children }) => {
           console.log(accounts[0]);
           userAddress = accounts[0];
         }
-        
+
         const contract = new ethers.Contract(
           chainlinkOracleFujiContractAddress,
           avaxOracleAbi,
@@ -452,11 +451,11 @@ export const ToolProvider = ({ children }) => {
         );
 
         const txRes = await contract.getAllPrices();
-        console.log("🟢🟢",txRes);
+        console.log("🟢🟢", txRes);
 
         txRes.map((crypto, i) => {
           formattedCrypto.push(Number(crypto._hex) / 100000000);
-        })
+        });
 
         // avax, btc, eth, link, matic
         return formattedCrypto;
@@ -464,10 +463,11 @@ export const ToolProvider = ({ children }) => {
     } catch (error) {
       console.log("Error while calculating price movements: ", error);
     }
-  }
+  };
 
   const getWalletERCDetails = async () => {
-    let userAddress, tempArray = [];
+    let userAddress,
+      tempArray = [];
     try {
       await Moralis.default.start({
         apiKey:
@@ -486,12 +486,15 @@ export const ToolProvider = ({ children }) => {
 
       response.raw.length > 0
         ? setUserOwnedTokens(response.raw)
-        : setUserOwnedTokens([`AVAX : $ ${(tokens[0]).toFixed(2)}`, `BTC : $ ${tokens[1].toFixed(2)}`, `ETH : $ ${tokens[2].toFixed(2)}`, `LINK : $ ${tokens[3].toFixed(2)}`, `MATIC : $ ${tokens[4].toFixed(2)}`]);
-
-
+        : setUserOwnedTokens([
+            `AVAX : $ ${tokens[0].toFixed(2)}`,
+            `BTC : $ ${tokens[1].toFixed(2)}`,
+            `ETH : $ ${tokens[2].toFixed(2)}`,
+            `LINK : $ ${tokens[3].toFixed(2)}`,
+            `MATIC : $ ${tokens[4].toFixed(2)}`,
+          ]);
 
       return response.raw;
-
     } catch (e) {
       console.error(e);
     }
@@ -537,7 +540,7 @@ export const ToolProvider = ({ children }) => {
             formattedCrypto.map((element, i) => {
               let changePercent =
                 (Math.abs(tempArray[i] - element) / element) * 100;
-
+              console.log("🟢🟢🟢🟢🟢🟢", changePercent);
               if (changePercent > 5)
                 console.log("PRICE IS VERY VOLATILE!!! RUN!!!💀💀💀");
             });
@@ -554,16 +557,54 @@ export const ToolProvider = ({ children }) => {
             txRes.map((crypto, i) => {
               tempArray.push(Number(crypto._hex) / 100000000);
             });
-
+            console.log("🟢🟢🟢🟢🟢🟢", tempArray, value);
             if (value.length > 0) {
               value.map((element, i) => {
                 let changePercent =
                   (Math.abs(tempArray[i] - element) / element) * 100;
 
-                if (changePercent > 5)
+                if (changePercent > 0.001) {
                   console.log("PRICE IS VERY VOLATILE!!! RUN!!!💀💀💀");
+                  let highss = localStorage.getItem("highlights");
+                  let highs = JSON.parse(highss);
+                  var d = new Date(Date.now());
+                  var t = d.toLocaleTimeString();
+                  var d2 = new Date(Date.now() - 60000);
+                  var t2 = d2.toLocaleTimeString();
+                  let ft = t.toString() + " - " + t2.toString();
+
+                  let final = [
+                    ...highs,
+                    {
+                      id: highs.length + 1,
+                      token: userOwnedTokens[i].split(":")[0],
+                      change: changePercent + "%",
+                      time: "1 min",
+                      fromto: ft,
+                    },
+                  ];
+                  localStorage.setItem("highlights", JSON.stringify(final));
+                  if (changePercent > stoplossPercentLow) {
+                    console.log("STOPLOSS TRIGGERED!!!💀💀💀");
+                    let stoploss = localStorage.getItem("stoploss");
+                    let stoplosses = JSON.parse(stoploss);
+                    let final = [
+                      ...stoplosses,
+                      {
+                        id: stoplosses.length + 1,
+                        token: userOwnedTokens[i].split(":")[0],
+                        soldat: tempArray[i],
+                        amount: stoplossPercentToken + "%",
+                        time: ft,
+                      },
+                    ];
+                    localStorage.setItem("stoploss", JSON.stringify(final));
+                  }
+                  window.location.reload();
+                }
               });
             }
+            localStorage.setItem("FormattedCrypto", tempArray);
           }, 6000);
         }
 

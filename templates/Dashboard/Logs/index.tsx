@@ -4,15 +4,60 @@ import styles from "./Logs.module.sass";
 import Tabs from "@/components/Tabs";
 import Form from "@/components/Form";
 import Log from "./Log";
-
-import { Stoploss } from "@/mocks/stoploss";
-import { highlights } from "@/mocks/highlights";
+import { useEffect } from "react";
+// import { Stoploss } from "@/mocks/stoploss";
+// import { highlights } from "@/mocks/highlights";
 type LogsProps = {
   type: string;
 };
 
 const Logs = ({ type }: LogsProps) => {
-  const logs = type === "stoploss" ? Stoploss : highlights;
+  const [finallogs, setFinallogs] = useState([
+    {
+      id: 1,
+      token: "ETH",
+      change: "0.5532621688493791%",
+      time: "1 min",
+      fromto: "7:32:10 AM - 7:31:10 AM",
+    },
+  ]);
+  const [Stoploss, setStoploss] = useState([
+    {
+      id: 1,
+      token: "ETH",
+      soldat: "12345.3",
+      amount: "50%",
+      time: "5:23:22 AM",
+    },
+  ]);
+  useEffect(() => {
+    const data = localStorage.getItem("highlights");
+    const stoploss = localStorage.getItem("stoploss");
+    if (data) {
+      let d = JSON.parse(data);
+      //check for duplicate entried and delete them
+      let unique = d.filter(
+        (
+          (set) => (f) =>
+            !set.has(f.change) && set.add(f.change)
+        )(new Set())
+      );
+      setFinallogs(unique);
+    }
+    if (stoploss) {
+      let d = JSON.parse(stoploss);
+      //check for duplicate entried and delete them
+      let unique = d.filter(
+        (
+          (set) => (f) =>
+            !set.has(f.soldat) && set.add(f.soldat)
+        )(new Set())
+      );
+      setStoploss(unique);
+    }
+  }, []);
+
+  const logs = type === "stoploss" ? Stoploss : finallogs;
 
   return (
     <div className={styles.row}>

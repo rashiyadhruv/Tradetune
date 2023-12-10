@@ -2,18 +2,14 @@ export const creativity = [
   {
     content: (
       <>
-        <h2>
-          Your Collection, <br></br>your way.
-        </h2>
+        <h2>Snipe</h2>
         <p>
-          In web3, artists are taking back ownership and control over their
-          creativity. All collections on Tradetune are creator-owned smart
-          contracts that will stand the test of time.
+          {" "}
+          Snipe is your smart companion in the decentralized finance world,
+          specifically designed for liquidity pools. It swiftly spots
+          opportunities in these pools, ensuring your trades are timed perfectly
+          to take advantage of price imbalances.
         </p>
-        <ul>
-          <li>You’ll earn a 10% royalty for all secondary market sales.</li>
-          <li>Creativity is valuable on Tradetune</li>
-        </ul>
       </>
     ),
     video: "/videos/video-1.mp4",
@@ -22,16 +18,14 @@ export const creativity = [
   {
     content: (
       <>
-        <h2>
-          Lowest <br></br>mint fees
-        </h2>
+        <h2>Assistant</h2>
         <p>
-          Minting an NFT is like adding your signature to a painting. Make your
-          mark in web3 with works that are emblematic of your creative practice.
-        </p>
-        <p>
-          Plus, you’ll earn a 10% royalty for all secondary market sales.
-          Forever.
+          Tradetune is your personalized ally for day-to-day trading in the
+          fast-paced crypto world. This intelligent assistant keeps you informed
+          by sending timely alerts whenever there's a sudden price change in
+          tokens you own or those you're keeping a close watch on. It also
+          provides stop loss features to minimize your losses according to the
+          user configration.
         </p>
       </>
     ),
@@ -41,15 +35,11 @@ export const creativity = [
   {
     content: (
       <>
-        <h2>Create together, earn together.</h2>
+        <h2>M.A.A.P.</h2>
         <p>
-          Add a Split to your NFT to seamlessly pay creative
-          collaborators—photographers, producers, choreographers, dancers,
-          poets—and so on.
-        </p>
-        <p>
-          You can also use Splits to donate directly to the causes you care
-          about most. That’s the web3 way.
+          Movement Analysis And Prediction (M.A.A.P.) is a tool that helps you
+          to analyze the movement of the whales in the market and predict the
+          the effect of their movement on the price of the token.
         </p>
       </>
     ),

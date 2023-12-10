@@ -110,7 +110,7 @@ query MyQuery {
   }
   console.log(data);
   let whalesData = Object.values(data).map((chaintxns, i) => {
-    return chaintxns.TokenTransfer.map((tx) => {
+    return chaintxns?.TokenTransfer.map((tx) => {
       if (tx.from.identity !== "0x0000000000000000000000000000000000000000") {
         return {
           from: tx.from.identity,
@@ -219,7 +219,7 @@ query MyQuery($from: Identity, $address: Address) {
       address: tx.tokenaddress,
     });
     let toptnxs = Object.values(data)?.map((chaintxns, i) => {
-      return chaintxns.TokenTransfer?.map((tx, j) => {
+      return chaintxns?.TokenTransfer?.map((tx, j) => {
         if (
           tx.from.identity !== "0x0000000000000000000000000000000000000000" &&
           j === 0

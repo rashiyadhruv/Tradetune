@@ -24,10 +24,10 @@ const Logs = ({ type }: LogsProps) => {
   const [Stoploss, setStoploss] = useState([
     {
       id: 1,
-      token: "ETH",
-      soldat: "12345.3",
+      token: "AVAX",
+      soldat: 32.51968191,
       amount: "50%",
-      time: "5:23:22 AM",
+      time: "7:42:34 AM - 7:41:34 AM",
     },
   ]);
   useEffect(() => {

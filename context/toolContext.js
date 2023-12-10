@@ -48,19 +48,11 @@ export const ToolProvider = ({ children }) => {
   const [stoplossPercentToken, setStoplossPercentToken] = useState(50);
   const [currentAccount, setCurrentAccount] = useState("");
   const [userOwnedTokens, setUserOwnedTokens] = useState([
-    "ETH",
-    "BNB",
-    "FIL",
-    "ADA",
-    "DOT",
-    "SOL",
-    "LUNA",
     "AVAX",
-    "UNI",
+    "BTC",
+    "ETH",
     "LINK",
     "MATIC",
-    "XRP",
-    "DOGE",
   ]);
   const [watchListTokens, setWatchListTokens] = useState([
     "SAND",
